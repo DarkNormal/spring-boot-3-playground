@@ -3,6 +3,7 @@ package com.in28minutes.springboot.myfirstwebapp.todo;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,21 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import java.time.LocalDate;
 import java.util.List;
 
-//@Controller
-@SessionAttributes("name") public class TodoController {
+@Controller @SessionAttributes("name") public class TodoControllerJpa {
 
-	public TodoController(TodoService todoService) {
+	public TodoControllerJpa(TodoService todoService, TodoRepository todoRepository) {
 		super();
 		this.todoService = todoService;
+		this.todoRepository = todoRepository;
 	}
+
+	private final TodoRepository todoRepository;
 
 	private final TodoService todoService;
 
 	@RequestMapping("list-todos") public String listAllTodos(ModelMap model) {
 		String username = getLoggedInUsername();
-		List<Todo> todos = todoService.findByUsername(username);
+		List<Todo> todos = todoRepository.findByUsername(username);
 		model.addAttribute("todos", todos);
 
 		return "listTodos";
@@ -52,7 +55,7 @@ import java.util.List;
 	}
 
 	@RequestMapping("delete-todo") public String deleteTodo(@RequestParam int id) {
-		todoService.deleteById(id);
+		todoRepository.deleteById(id);
 		return "redirect:list-todos";
 
 	}

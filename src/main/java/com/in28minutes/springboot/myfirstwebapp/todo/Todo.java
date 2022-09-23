@@ -13,6 +13,10 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Todo {
 
+	public Todo(){
+
+	}
+
 	public Todo(int id, String username, String description, LocalDate targetDate, boolean done) {
 		super();
 		this.id = id;
